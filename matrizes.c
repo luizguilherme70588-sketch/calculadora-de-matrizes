@@ -129,3 +129,108 @@ int multiplicarMatrizes(Matriz a, Matriz b, Matriz *resultado) {
 
     return 1;
 }
+
+#include <math.h>
+
+// CALCULO DA MATRIZ INVERSA
+int inverterMatriz(Matriz original, Matriz *inversa) {
+
+    if (original.linhas != original.colunas) {
+        printf("\nErro: a matriz precisa ser quadrada!\n");
+        return 0;
+    }
+
+    int n = original.linhas;
+    double auxiliar[50][100];
+
+    // Monta a matriz aumentada [A | I]
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            auxiliar[i][j] = original.dados[i][j];
+            auxiliar[i][j + n] = (i == j) ? 1.0 : 0.0;
+        }
+    }
+
+    // Metodo de Gauss-Jordan com pivoteamento
+    for (int i = 0; i < n; i++) {
+
+        int pivo = i;
+
+        for (int k = i + 1; k < n; k++) {
+            if (fabs(auxiliar[k][i]) >
+                fabs(auxiliar[pivo][i])) {
+                pivo = k;
+            }
+        }
+
+        if (fabs(auxiliar[pivo][i]) < 1e-10) {
+            printf("\nErro: matriz sem inversa!\n");
+            return 0;
+        }
+
+        // Troca as linhas
+        if (pivo != i) {
+            for (int j = 0; j < 2 * n; j++) {
+                double temp = auxiliar[i][j];
+                auxiliar[i][j] = auxiliar[pivo][j];
+                auxiliar[pivo][j] = temp;
+            }
+        }
+
+        // Transforma o pivo em 1
+        double divisor = auxiliar[i][i];
+
+        for (int j = 0; j < 2 * n; j++) {
+            auxiliar[i][j] /= divisor;
+        }
+
+        // Zera os outros elementos da coluna
+        for (int k = 0; k < n; k++) {
+
+            if (k != i) {
+
+                double fator = auxiliar[k][i];
+
+                for (int j = 0; j < 2 * n; j++) {
+                    auxiliar[k][j] -=
+                        fator * auxiliar[i][j];
+                }
+            }
+        }
+    }
+
+    inversa->linhas = n;
+    inversa->colunas = n;
+
+    // Copia o resultado da inversa
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            inversa->dados[i][j] = auxiliar[i][j + n];
+        }
+    }
+
+    return 1;
+}
+
+// DIVISAO DE MATRIZES
+int dividirMatrizes(Matriz a, Matriz b, Matriz *resultado) {
+
+    Matriz inversa;
+
+    if (b.linhas != b.colunas) {
+        printf("\nErro: a matriz divisora precisa ser quadrada!\n");
+        return 0;
+    }
+
+    if (a.colunas != b.linhas) {
+        printf("\nErro: dimensoes incompatíveis para divisao!\n");
+        return 0;
+    }
+
+    if (!inverterMatriz(b, &inversa)) {
+        return 0;
+    }
+
+    return multiplicarMatrizes(a, inversa, resultado);
+}
+
