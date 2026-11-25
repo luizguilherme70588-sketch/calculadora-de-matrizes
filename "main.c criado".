@@ -1,0 +1,22 @@
+
+#ifndef MATRIZES_H
+#define MATRIZES_H
+
+#define MAX_MATRIZES 10
+
+typedef struct {
+    int linhas;
+    int colunas;
+    double dados[50][50];
+} Matriz;
+
+void cadastrarMatriz(Matriz *matriz);
+void exibirMatriz(Matriz matriz);
+
+int somarMatrizes(Matriz a, Matriz b, Matriz *resultado);
+int subtrairMatrizes(Matriz a, Matriz b, Matriz *resultado);
+int multiplicarMatrizes(Matriz a, Matriz b, Matriz *resultado);
+int inverterMatriz(Matriz original, Matriz *inversa);
+int dividirMatrizes(Matriz a, Matriz b, Matriz *resultado);
+
+#endif
