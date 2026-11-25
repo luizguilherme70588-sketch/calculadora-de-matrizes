@@ -97,3 +97,35 @@ int subtrairMatrizes(Matriz a, Matriz b, Matriz *resultado) {
 
     return 1;
 }
+
+// MULTIPLICACAO DE MATRIZES
+int multiplicarMatrizes(Matriz a, Matriz b, Matriz *resultado) {
+
+    if (a.colunas != b.linhas) {
+
+        printf("\nErro: nao e possivel multiplicar essas matrizes!\n");
+        printf("Colunas da primeira devem ser iguais as linhas da segunda.\n");
+
+        return 0;
+    }
+
+    resultado->linhas = a.linhas;
+    resultado->colunas = b.colunas;
+
+    for (int i = 0; i < resultado->linhas; i++) {
+
+        for (int j = 0; j < resultado->colunas; j++) {
+
+            resultado->dados[i][j] = 0;
+
+            for (int k = 0; k < a.colunas; k++) {
+
+                resultado->dados[i][j] +=
+                    a.dados[i][k] * b.dados[k][j];
+
+            }
+        }
+    }
+
+    return 1;
+}
